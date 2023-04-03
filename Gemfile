@@ -20,6 +20,7 @@ gem 'bootsnap',   '1.10.3', require: false
 gem 'net-smtp', require: false
 gem 'net-imap', require: false
 gem 'net-pop', require: false
+gem 'psych', '~> 3.1'  # error：Psych::BadAlias: Unknown alias: defaultの対策
 
 group :development, :test do
   gem 'sqlite3', '1.4.1'
