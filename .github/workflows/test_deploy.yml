@@ -1,0 +1,54 @@
+name: Test and Deploy
+
+on:
+  pull_request:
+  # onには、このワークフローを起動させるきっかけとなるイベントを指定します。
+  # ここではpull_requestを指定していますが、これによりプルリクエストが作成された時などにワークフローが起動します。
+  # また、プルリクエストに追加でコミットがプッシュされた時にもワークフローは起動します。
+  # なお、イベントの種類は複数指定可能です。
+
+
+#* workflow(このファイルそのもの) > job(複数のstepで構成) > step(最小単位)
+# job
+jobs:
+  test:                     # job_idと言う
+    name: Test                # jobの名前。nameは省略可能で、省略した場合はjob_idがnameとして表示されます。
+    runs-on: ubuntu-latest    # GitHub Actionsに用意された環境。Dockerなど基本的なソフトウェアが一通りインストールされている。
+
+    # step
+    steps:
+      - uses: actions/checkout@v2    # GitHubの仮想マシン環境にコードをチェックアウト(クローン)する
+
+      - uses: ruby/setup-ruby@v1    # Ruby公式のアクション
+        with:
+          ruby-version: 2.6.8
+
+      - name: Run bundle install    # stepの名前。Gemをインストールする。
+        # runには、そのステップで実行するコマンドを記述します。コマンドが複数行にわたる場合は、最初に|と記述し、その次の行からコマンドを記述します。
+        # bundle config <name> <value>とすることで、Bundlerの設定を行います。なお、--localオプションを指定することで、設定は.bundle/configに保存されます。
+        # path：Gemのインストール先を指定します。ここではvendor/bundleにインストールされるよう指定しています。
+        # without：withoutをproductionにすることで、Gemfileのうち、productionのグループのものはインストールされなくなります。今回テストを実行するにあたって必要なGemfileはtestのグループのものであることと、5章で本番環境にデプロイする時に使うCapistranoはdevelopmentグループとするので、このような指定にしています。
+        run: |
+          bundle config --local path vender/bundle
+          bundle config --local without production
+          bundle install
+
+      # アセットのコンパイル　
+      - run: RAILS_ENV=test bundle exec rails assets:precompile
+
+      # ビルド(Gemのインストール、アセットのコンパイル)が終わったのでテストを実行する
+      - run: bundle exec rails test
+
+
+# GhatGPTへの質問と回答
+# 【質問】
+# actions/checkout@v2についての説明として以下の回答をもらったのですが、ここで言う"GitHub Actionsの環境"とは具体的にはどのようなものですか？
+# 「起動したばかりのGitHub Actionsの環境には、まだrails-deployリポジトリのコードが存在しません。そのため、コードをチェックアウト(ダウンロード)してやる必要があります。GitHub公式の「アクション」のひとつであるactions/checkoutを使うと、GitHub Actionsの環境にrails-deployリポジトリのコードをチェックアウト(クローン)できます。」
+
+# 【回答】
+# ここで言う「GitHub Actionsの環境」とは、GitHubが提供する仮想マシン環境のことです。GitHub Actionsでは、各ジョブが独自の仮想マシン環境で実行されます。ジョブが開始されたときに、GitHubがその環境を構成し、必要なソフトウェアをインストールし、その後、ユーザーが指定した手順に従って処理を実行します。したがって、GitHub Actionsの環境には、最初からrails-deployリポジトリのコードは含まれていません。それを実行する前に、アクションで提供されるcheckoutコマンドを使用して、コードをチェックアウト(ダウンロード)する必要があります。
+
+
+# 用語集
+# usesには、使用するアクション名を指定します。
+# GitHub Actionsでは、よく使う便利な処理のまとまりがモジュール化されており、必要に応じて呼び出して使うことができます。こうしたモジュールのことを「アクション」と呼びます。
