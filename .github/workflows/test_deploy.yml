@@ -17,11 +17,15 @@ jobs:
 
     # step
     steps:
-      - uses: actions/checkout@v2.5.2    # GitHubの仮想マシン環境にコードをチェックアウト(クローン)する
+      - uses: actions/checkout@v2    # GitHubの仮想マシン環境にコードをチェックアウト(クローン)する
 
       - uses: ruby/setup-ruby@v1    # Ruby公式のアクション
         with:
           ruby-version: 2.6.8
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
 
       - name: Run bundle install    # stepの名前。Gemをインストールする。
         # runには、そのステップで実行するコマンドを記述します。コマンドが複数行にわたる場合は、最初に|と記述し、その次の行からコマンドを記述します。
