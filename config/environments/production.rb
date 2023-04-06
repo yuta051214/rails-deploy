@@ -66,8 +66,9 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = '<your heroku app>.herokuapp.com'
+  host = ENV['APP_DOMAIN']  #! 例えば今回なら https://enigmatic-meadow-46430.herokuapp.com が入る
   config.action_mailer.default_url_options = { host: host }
+  #! 以下の環境変数は、Herokuのsettings > Config Varsで管理されている。APP_DOMAINも同様。
   ActionMailer::Base.smtp_settings = {
     :port           => ENV['MAILGUN_SMTP_PORT'],
     :address        => ENV['MAILGUN_SMTP_SERVER'],
