@@ -47,7 +47,7 @@ jobs:
         # path：Gemのインストール先を指定します。ここではvendor/bundleにインストールされるよう指定しています。
         # without：withoutをproductionにすることで、Gemfileのうち、productionのグループのものはインストールされなくなります。今回テストを実行するにあたって必要なGemfileはtestのグループのものであることと、5章で本番環境にデプロイする時に使うCapistranoはdevelopmentグループとするので、このような指定にしています。
         run: |
-          bundle config --local path vender/bundle
+          bundle config --local path vendor/bundle
           bundle config --local without production
           bundle install
 
@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules
-          ley: yarn-v1-${{ hashFiles('yarn.lock') }}
+          key: yarn-v1-${{ hashFiles('yarn.lock') }}
 
       # アセットのコンパイル　
       - run: RAILS_ENV=test bundle exec rails assets:precompile
