@@ -17,8 +17,6 @@ jobs:
 
     # step
     steps:
-      - run: exit 1   # わざとテストを失敗させる
-
       - uses: actions/checkout@v2    # GitHubの仮想マシン環境にコードをチェックアウト(クローン)する
 
       - uses: ruby/setup-ruby@v1    # Ruby公式のアクション
@@ -33,7 +31,7 @@ jobs:
       # actions/cacheの実行タイミングは３つ。①それが記述されたstepで実行, ②後続の全てのstepで実行, ③jobの終了時に実行。
       # ③では、pathに指定したディレクトリもしくはファイルを、keyに指定した名前でキャッシュします。
       # そして、次回ジョブ起動時の①の時、同じkeyのキャッシュがあれば、それを復元してくれます。
-      # 今回、keyにおいてhashFiles関数を使うことで、Gemfile.lockをハッシュ化して得た値をkeyに含めるようにしています。
+      # 今回、keyにおいてhashFiles関数を使うことで、Gemfile.lockのSHA256ハッシュをkeyに含めるようにしています。
       # これにより、前回ジョブ起動時からGemfile.lockに変化が無ければkeyが一致することとなり、キャッシュを利用することになります。
       # なお、keyにv1という文字列を含めている理由を解説します。
       # actions/cacheで一度キャッシュされたファイルは、任意に削除することができません。
