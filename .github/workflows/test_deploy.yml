@@ -23,7 +23,21 @@ jobs:
         with:
           ruby-version: 2.6.8
 
-      - uses: actions/setup-node@v2
+      - name: Cache bundle    # Gemのキャッシュ
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
+      # actions/cacheの実行タイミングは３つ。①それが記述されたstepで実行, ②後続の全てのstepで実行, ③jobの終了時に実行。
+      # ③では、pathに指定したディレクトリもしくはファイルを、keyに指定した名前でキャッシュします。
+      # そして、次回ジョブ起動時の①の時、同じkeyのキャッシュがあれば、それを復元してくれます。
+      # 今回、keyにおいてhashFiles関数を使うことで、Gemfile.lockのSHA256ハッシュをkeyに含めるようにしています。
+      # これにより、前回ジョブ起動時からGemfile.lockに変化が無ければkeyが一致することとなり、キャッシュを利用することになります。
+      # なお、keyにv1という文字列を含めている理由を解説します。
+      # actions/cacheで一度キャッシュされたファイルは、任意に削除することができません。
+      # そのため、Gemfile.lockに変化は無いけれども何らかの事情でキャッシュを使用しないでジョブを実行したい場合に、v1の部分をv2などに書き換えて強制的にkey不一致の状態を作り出せるよう、このようなkeyにしています。
+
+      - uses: actions/setup-node@v2   #node.js
         with:
           node-version: 16
 
@@ -36,6 +50,12 @@ jobs:
           bundle config --local path vender/bundle
           bundle config --local without production
           bundle install
+
+        - name: Cache yarn    # node-modulesのキャッシュ
+          uses: actions/cache@v2
+          with:
+            path: node_modules
+            ley: yarn-v1-${{ hashFiles('yarn.lock') }}
 
       # アセットのコンパイル　
       - run: RAILS_ENV=test bundle exec rails assets:precompile
