@@ -66,7 +66,7 @@ bind "unix:#{app_root}/tmp/sockets/puma.sock"  # UNIXドメインソケットを
 # 【補足】コンテナ間でのpuma.sockの共有について
 # ローカルのDocker環境では、appコンテナ(Railsやpumaのコンテナ)の/var/www/tmp/socketsディレクトリがwebコンテナと共有されています。
 # そのため、異なるコンテナ間で、ひとつのファイルを使って通信が可能となっています。
-# ```dicker-compose.yml
+# ```docker-compose.yml
 # web:
 #   # 略
 #   volumes:
