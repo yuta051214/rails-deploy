@@ -21,6 +21,7 @@ gem 'net-smtp', require: false
 gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem 'psych', '~> 3.1'  # error：Psych::BadAlias: Unknown alias: defaultの対策
+gem 'dotenv-rails', '2.7.6'  # dotenv-railsは、Ruby on Railsで環境変数を簡単に扱うためのライブラリです。環境変数をファイルに記述し、dotenv-railsを用いてアプリケーション内で読み込むことができます。
 
 group :development, :test do
   gem 'sqlite3', '1.4.1'

@@ -35,16 +35,18 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
-  # アップロードされたファイルをAWSに保存する
-  # config.active_storage.service = :amazon
+  #* アップロードされたファイルをAWSに保存する
+  config.active_storage.service = :amazon
+  #* このコードはRuby on RailsでAmazon S3を使用するための設定です。config.active_storage.service は、アクティブストレージライブラリーが使用する外部ストレージサービスの種類を定義するために使用されます。この行がAmazon S3を使用するように設定しています。具体的には、:amazonという値を設定しています(config/storage.ymlで定義している)。これにより、アプリケーションがActive Storage API経由でAmazon S3サービスを利用できるようになります。つまり、アプリケーション内からS3ストレージに画像ファイルや動画データなどを保存したり、読み取ったりできるようになります。
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  #* アプリケーションがHTTPではなくHTTPSを介して通信するように強制するために使用されます。
+  #* 今回はHTTPで通信できるように設定する。
+  config.force_ssl = false
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.

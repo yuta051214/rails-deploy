@@ -26,6 +26,9 @@ production:
   # For details on connection pooling, see Rails configuration guide
   # https://railsguides.jp/configuring.html#データベース接続をプールする
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: sample_app_production
-  username: sample_app
-  password: <%= ENV['SAMPLE_APP_DATABASE_PASSWORD'] %>
+  # production環境(AWSのEC2)において、データベースに接続するために必要な情報を環境変数から取得するようにする
+  database: <%= ENV['DB_DATABASE'] %>    # データベース名
+  username: <%= ENV['DB_USER'] %>        # データベースに接続するためのユーザー名
+  password: <%= ENV['DB_PASSWORD'] %>    # データベースに接続するためのパスワード
+  host: <%= ENV['DB_HOST'] %>    # データベースが稼働しているホスト名またはIPアドレス
+  port: <%= ENV['DB_PORT'] %>    # データベースに接続するためのポート番号
