@@ -59,7 +59,7 @@ jobs:
     steps:
       - name: install SSH key
         run : |
-          mkdir -p -m 700 ~/.shh
+          mkdir -p -m 700 ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/rails-deploy-webapp
           chmod 600 ~/.ssh/rails-deploy-webapp
 
